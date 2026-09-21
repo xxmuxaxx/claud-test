@@ -24,7 +24,7 @@ export function Game2048() {
         {status !== 'running' && (
           <div
             aria-live="polite"
-            className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl bg-white/85 p-4 text-center backdrop-blur-sm dark:bg-slate-900/85"
+            className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 rounded-xl bg-white/85 p-4 text-center backdrop-blur-sm dark:bg-slate-900/85"
           >
             <p className="text-2xl font-bold">
               {status === 'won' ? t('games.2048.won') : t('games.2048.gameOver')}
