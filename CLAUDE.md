@@ -1,4 +1,4 @@
-# Modern React App
+# Nook
 
 React 19 + Vite + TypeScript + Tailwind CSS v4 + React Router 8 + Zustand. Sections: `/tasks` (to-do list), `/wiki` (personal Markdown wiki), `/games` (games: Snake at `/games/snake`, 2048 at `/games/2048`). `/` redirects to `/tasks`. Repo layout: `frontend/` (React app, own `package.json`), `backend/` (Fastify + Prisma REST API, own `package.json`; see `backend/README.md`), and the shared `docker-compose.yml` at the root. Tasks and Wiki data live in PostgreSQL behind the API. Paths like `src/...` below are relative to `frontend/`. The user communicates in Russian.
 
@@ -61,7 +61,7 @@ Before committing, `typecheck`, `lint`, `format:check` and `test` must pass in b
 
 ## i18n (ru / en / ka)
 
-- Every user-visible string goes through `t()` (`react-i18next`); never hardcode UI text. Brand name "Modern React App" is intentionally not translated.
+- Every user-visible string goes through `t()` (`react-i18next`); never hardcode UI text. Brand name "Nook" is intentionally not translated.
 - Dictionaries: `src/i18n/locales/{ru,en,ka}.ts`. `ru.ts` defines the key structure; `en`/`ka` are typed against it. A new key must be added to **all three**. Placeholders (`{{name}}`) and tags (`<code>`) must match across locales — `locales.test.ts` enforces this.
 - Don't store translated strings in state; store the condition/key and translate at render, so a language switch updates the UI.
 - Dates and numbers: use `Intl` with `i18n.language` (see `formatDueDate`), not a hardcoded locale.

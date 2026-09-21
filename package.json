@@ -1,5 +1,5 @@
 {
-  "name": "modern-react-app-workspace",
+  "name": "nook-workspace",
   "private": true,
   "description": "Convenience scripts; the frontend and the backend are independent npm projects (no shared node_modules).",
   "scripts": {

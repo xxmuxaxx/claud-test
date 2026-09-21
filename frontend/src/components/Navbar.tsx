@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { NavLink } from 'react-router'
+import { Link, NavLink } from 'react-router'
 import { cn } from '@/lib/cn'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ThemeSwitcher } from './ThemeSwitcher'
@@ -21,7 +21,10 @@ export function Navbar({ wide = false }: { wide?: boolean }) {
           wide ? 'max-w-7xl' : 'max-w-3xl',
         )}
       >
-        <span className="text-lg font-semibold">Modern React App</span>
+        <Link to="/" className="flex items-center gap-2.5 text-lg font-semibold">
+          <img src="/favicon.svg" alt="" width={28} height={28} className="size-7" />
+          Nook
+        </Link>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
           <ul className="flex gap-6 text-sm font-medium whitespace-nowrap">
             {links.map((link) => (

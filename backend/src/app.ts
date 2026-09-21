@@ -41,7 +41,7 @@ export async function buildApp({ config, prisma }: AppDependencies): Promise<Fas
     openapi: {
       openapi: '3.0.3',
       info: {
-        title: 'Modern React App API',
+        title: 'Nook API',
         description: 'REST API of the To-Do and Wiki sections.',
         version: '1.0.0',
       },
