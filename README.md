@@ -1,72 +1,46 @@
 # Modern React App
 
-Стартовый шаблон на современном стеке:
-
-- **[Vite](https://vite.dev)** — сборка и дев-сервер
-- **[React 19](https://react.dev)** + **TypeScript**
-- **[Tailwind CSS v4](https://tailwindcss.com)** — CSS-first конфигурация через `@theme` (см. `src/index.css`), без `tailwind.config.js`
-- **[React Router v8](https://reactrouter.com)** — роутинг через `createBrowserRouter`
-- **[Zustand](https://zustand.docs.pmnd.rs)** — стейт-менеджмент (пример: `src/store/useCounterStore.ts`)
-- **ESLint 10** (flat config) + **Prettier** — линт и форматирование
-- **Vitest** + **Testing Library** — юнит- и компонентные тесты
-
-## Структура
+Личный органайзер: **список дел** и **Wiki** (статьи в Markdown с тегами и поиском).
 
 ```
-src/
-  components/   переиспользуемые UI-компоненты
-  pages/        компоненты страниц (роуты)
-  router/       конфигурация React Router
-  store/        Zustand-сторы
-  lib/          небольшие утилиты
-  test/         настройка тестового окружения
+frontend/            React 19 + Vite + TypeScript + Tailwind v4 (см. frontend/README.md)
+backend/             REST API: Fastify + Prisma + PostgreSQL (см. backend/README.md)
+docker-compose.yml   PostgreSQL + backend + frontend одной командой
+package.json         только удобные скрипты; у frontend и backend свои package.json и node_modules
 ```
 
-## Локализация (i18n)
+## Запуск
 
-Интерфейс переведён на русский (`ru`), английский (`en`) и грузинский (`ka`) через
-**[i18next](https://www.i18next.com)** + **react-i18next**.
-
-- Словари: `src/i18n/locales/{ru,en,ka}.ts`. `ru.ts` задаёт структуру ключей, `en`/`ka`
-  типизированы под неё — пропущенный ключ не пройдёт `npm run typecheck`, а тест
-  `locales.test.ts` дополнительно сверяет плейсхолдеры `{{…}}` и теги в строках.
-- Ключи в `t('…')` проверяются типами (`src/i18n/i18next.d.ts`).
-- Язык определяется по `localStorage` (`app.language`), затем по языку браузера; если он не
-  поддерживается — английский. Переключатель находится в шапке; выбор сохраняется, а
-  `<html lang>` обновляется автоматически.
-- Даты форматируются через `Intl` с текущей локалью (`formatDueDate(iso, locale)`).
-- Чтобы добавить язык: создайте `src/i18n/locales/xx.ts`, подключите его в `src/i18n/index.ts`
-  и добавьте в `LANGUAGES`.
-
-## Установка
-
-Пакеты не установлены — зависимости нужно подтянуть один раз командой ниже
-(это единственный шаг, требующий обычного терминала с доступом в интернет,
-а не среды Claude, у которой доступ к npm registry ограничен политикой сети):
+### Всё в Docker
 
 ```bash
-npm install
+docker compose up --build
 ```
 
-## Скрипты
+Откройте <http://localhost:5173>. API — <http://localhost:3000/api/v1>, Swagger — <http://localhost:3000/api/docs>.
+Миграции применяются автоматически, пустая БД заполняется демо-данными. Порты и пароль БД можно поменять
+через `.env` (шаблон — `.env.example`).
 
-| Команда                | Назначение                              |
-| ---------------------- | --------------------------------------- |
-| `npm run dev`          | дев-сервер с HMR                        |
-| `npm run build`        | проверка типов + продакшен-сборка       |
-| `npm run preview`      | локальный предпросмотр собранного билда |
-| `npm run lint`         | проверка ESLint                         |
-| `npm run lint:fix`     | автофикс ESLint                         |
-| `npm run format`       | форматирование Prettier                 |
-| `npm run format:check` | проверка форматирования без изменений   |
-| `npm run typecheck`    | только проверка типов TypeScript        |
-| `npm run test`         | запуск тестов Vitest один раз           |
-| `npm run test:watch`   | тесты в watch-режиме                    |
+### Для разработки
 
-## Алиас путей
+```bash
+npm run install:all      # зависимости обоих проектов
 
-`@/*` указывает на `src/*` (настроено в `vite.config.ts` и `tsconfig.app.json`), например:
+# backend + PostgreSQL (вариант без Docker, см. backend/README.md):
+cd backend && cp .env.example .env
+npm run db:embedded      # PostgreSQL — оставьте в отдельном терминале
+npm run db:migrate && npm run db:seed && npm run dev
 
-```ts
-import { Counter } from '@/components/Counter'
+# frontend (из корня репозитория):
+npm run dev              # http://localhost:5173
+```
+
+Если Docker есть, вместо `db:embedded` можно поднять только базу и backend:
+`docker compose up db backend`.
+
+## Проверки
+
+```bash
+npm run check   # typecheck + lint + format:check + tests для frontend и backend
+npm run build   # production-сборка обоих проектов
 ```

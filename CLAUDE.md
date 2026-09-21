@@ -1,8 +1,10 @@
 # Modern React App
 
-React 19 + Vite + TypeScript + Tailwind CSS v4 + React Router 8 + Zustand. Sections: `/` (counter), `/tasks` (to-do list, localStorage), `/wiki` (personal Markdown wiki, localStorage), `/about`. The user communicates in Russian.
+React 19 + Vite + TypeScript + Tailwind CSS v4 + React Router 8 + Zustand. Sections: `/` (counter), `/tasks` (to-do list), `/wiki` (personal Markdown wiki), `/about`. Repo layout: `frontend/` (React app, own `package.json`), `backend/` (Fastify + Prisma REST API, own `package.json`; see `backend/README.md`), and the shared `docker-compose.yml` at the root. Tasks and Wiki data live in PostgreSQL behind the API. Paths like `src/...` below are relative to `frontend/`. The user communicates in Russian.
 
 ## Commands
+
+Frontend (`cd frontend`):
 
 | Command                | Purpose                          |
 | ---------------------- | -------------------------------- |
@@ -13,18 +15,32 @@ React 19 + Vite + TypeScript + Tailwind CSS v4 + React Router 8 + Zustand. Secti
 | `npm run format:check` | Prettier check (`format` to fix) |
 | `npm run build`        | typecheck + production build     |
 
-Before committing, `typecheck`, `lint`, `format:check` and `test` must all pass.
+Backend (`cd backend`, own `package.json`): `npm run dev`, `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`, `npm run db:migrate|db:seed|db:embedded`. `docker compose up --build` (root) runs PostgreSQL + backend + frontend (nginx, http://localhost:5173). Root `package.json` only has convenience scripts (`npm run dev`, `npm run check` = every check of both projects); there is no shared `node_modules`.
+
+Before committing, `typecheck`, `lint`, `format:check` and `test` must pass in both `frontend/` and `backend/` (both use the shared root `.prettierrc.json`); `npm run check` at the root runs all of them.
 
 ## Conventions
 
 - `@/*` is an alias for `src/*`. Prettier: no semicolons, single quotes, 100 columns.
 - `cn()` (`src/lib/cn.ts`) only joins class names — it does **not** resolve conflicting Tailwind classes (no `tailwind-merge`). Don't pass two utilities for the same property expecting the last one to win.
-- Business logic lives in `src/lib` (pure, unit-tested) and `src/store`; components stay thin. The store and UI depend only on the `TaskRepository` interface in `src/services/taskRepository.ts` (currently backed by localStorage; swap the exported `taskRepository` to change the backend).
+- Business logic lives in `src/lib` (pure, unit-tested) and `src/store`; components stay thin.
+
+## Data & API layer
+
+- Layers: UI → Zustand store / data hooks → `src/api/*` (`tasksApi`, `articlesApi`, `tagsApi`) → `src/api/http.ts` (the only `fetch`). Components never call `fetch` or `src/api` directly. Backend URL: `VITE_API_BASE_URL` (default `http://localhost:3000/api/v1`; baked in at build time, a build arg in `frontend/Dockerfile`); the backend's `CORS_ORIGIN` must contain the frontend origin.
+- Search, filters and sorting are done by the backend, never in the browser. Typing is debounced (`useDebouncedValue`, 250 ms). The API layer maps the wire format to the frontend models (`null` → `undefined`); the frontend `Task` has no timestamps.
+- Errors are `ApiError` (`status`, `code`; `status 0` = server unreachable). Show them with `<ErrorNotice>` (`errors.*` i18n keys); failed writes keep the form/dialog open.
+- Tests never hit a network: `src/test/setup.ts` installs `fetch` = the in-memory `backend` from `src/test/fakeBackend.ts`, which mirrors the real API contract (seed with `backend.seedTasks/seedArticles`, inspect `backend.tasks/articles/requests`, simulate an outage with `backend.offline = true`). If the real API changes, change the fake too; the real API is covered by `backend/test`.
+- The only remaining `localStorage` use is the UI language (`app.language`). Old `tasks` / `wiki_articles` keys from the pre-backend version are ignored, not migrated.
+
+## Tasks (`/tasks`)
+
+- `useTasksStore` holds the list for the current view (`tasks`), the counters over all tasks (`stats`, from `GET /tasks/stats`) and `status`. `load(view)` sends the toolbar state (`toTaskQuery`) to the backend; every change reloads the list, so filters/order stay right. Only the newest `load` may write to the store (stale responses are dropped).
 
 ## Wiki (`/wiki`)
 
-- Routes: `/wiki`, `/wiki/new`, `/wiki/:articleId`, `/wiki/:articleId/edit`, `/wiki/tags/:tag` (see `src/router`; `routes` is exported so tests can render the real tree in a memory router). Storage key `wiki_articles`.
-- Same layering as tasks: UI → `useWikiStore` → `WikiStorage` interface (`src/services/wikiStorage.ts`, localStorage-backed). The storage assigns `id`/`createdAt`/`updatedAt`; `update` replaces all editable fields. Pure logic (search, tags, related, excerpts) is in `src/lib/wiki.ts`.
+- Routes: `/wiki`, `/wiki/new`, `/wiki/:articleId`, `/wiki/:articleId/edit`, `/wiki/tags/:tag` (see `src/router`; `routes` is exported so tests can render the real tree in a memory router).
+- `useWikiStore` keeps only wiki-wide numbers (`tags` with counts, `total`) for the sidebar/stats/empty state, plus the write actions (which refresh those numbers). Article lists and single articles are fetched per page by `hooks/useArticles` (`useArticleList`, `useArticle`, `useRelatedArticles`) on top of `useAsyncData`, so search never needs the whole wiki in the browser. The backend assigns `id`/`createdAt`/`updatedAt`; `update` replaces all editable fields. Pure helpers (tag normalization, excerpts, sorting of the loaded list) are in `src/lib/wiki.ts`.
 - The wide container is opted into per route with `handle: { wide: true }` (read by `Layout`).
 - Sidebar (desktop) vs. slide-out menu and split vs. tabbed editor are chosen in JS by `useIsDesktop` (matchMedia, `lg` = 1024px), not CSS, so only one variant is in the DOM. jsdom has no `matchMedia`, so tests get the narrow layout; stub `matchMedia` for desktop (see `WikiPages.test.tsx`).
 - Markdown is rendered by `MarkdownView` (react-markdown + remark-gfm; raw HTML is not rendered). The article title is the page `<h1>`, so Markdown headings are shifted one level down (`#` → `<h2>`) and styled by the `.wiki-h1..6` classes in `index.css`, not by tag. Tags are stored normalized (lowercase, no `#`).

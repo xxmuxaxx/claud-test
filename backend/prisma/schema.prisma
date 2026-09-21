@@ -1,0 +1,78 @@
+// Every domain module owns its own models; add new ones (Note, Bookmark, ...) below.
+// Do not add relations between the models of different modules — see backend/README.md.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ── Tasks ────────────────────────────────────────────────────────────────
+
+/// Declaration order matters: PostgreSQL sorts enums by it, so ORDER BY priority is low < medium < high.
+enum TaskPriority {
+  low
+  medium
+  high
+}
+
+model Task {
+  id          String       @id @default(uuid(7))
+  title       String       @db.VarChar(200)
+  description String?      @db.VarChar(2000)
+  completed   Boolean      @default(false)
+  priority    TaskPriority @default(medium)
+  /// A calendar date without time zone.
+  dueDate     DateTime?    @db.Date
+  createdAt   DateTime     @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime     @updatedAt @db.Timestamptz(3)
+
+  @@index([completed])
+  @@index([priority])
+  @@index([dueDate])
+  @@index([createdAt])
+  @@map("tasks")
+}
+
+// ── Wiki ─────────────────────────────────────────────────────────────────
+
+model Article {
+  id          String       @id @default(uuid(7))
+  title       String       @db.VarChar(200)
+  description String?      @db.VarChar(2000)
+  /// Markdown source.
+  content     String
+  createdAt   DateTime     @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime     @updatedAt @db.Timestamptz(3)
+  tags        ArticleTag[]
+
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@map("articles")
+}
+
+/// Normalized (lowercase, no `#`), unique. A tag exists independently of articles;
+/// the API only exposes tags that at least one article uses.
+model Tag {
+  id       String       @id @default(uuid(7))
+  name     String       @unique @db.VarChar(50)
+  articles ArticleTag[]
+
+  @@map("tags")
+}
+
+model ArticleTag {
+  articleId String
+  tagId     String
+  /// Position of the tag inside the article, so tags come back in the order the author gave them.
+  position  Int     @default(0)
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, tagId])
+  @@index([tagId])
+  @@map("article_tags")
+}
