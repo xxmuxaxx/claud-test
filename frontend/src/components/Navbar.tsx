@@ -4,10 +4,9 @@ import { cn } from '@/lib/cn'
 import { LanguageSwitcher } from './LanguageSwitcher'
 
 const links = [
-  { to: '/', labelKey: 'nav.home' },
   { to: '/tasks', labelKey: 'nav.tasks' },
   { to: '/wiki', labelKey: 'nav.wiki' },
-  { to: '/about', labelKey: 'nav.about' },
+  { to: '/games', labelKey: 'nav.games' },
 ] as const
 
 export function Navbar({ wide = false }: { wide?: boolean }) {
@@ -28,7 +27,6 @@ export function Navbar({ wide = false }: { wide?: boolean }) {
               <li key={link.to}>
                 <NavLink
                   to={link.to}
-                  end={link.to === '/'}
                   className={({ isActive }) =>
                     isActive
                       ? 'text-brand-600 dark:text-brand-400'

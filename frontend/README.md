@@ -6,7 +6,7 @@
 - **[React 19](https://react.dev)** + **TypeScript**
 - **[Tailwind CSS v4](https://tailwindcss.com)** — CSS-first конфигурация через `@theme` (см. `src/index.css`), без `tailwind.config.js`
 - **[React Router v8](https://reactrouter.com)** — роутинг через `createBrowserRouter`
-- **[Zustand](https://zustand.docs.pmnd.rs)** — стейт-менеджмент (пример: `src/store/useCounterStore.ts`)
+- **[Zustand](https://zustand.docs.pmnd.rs)** — стейт-менеджмент (пример: `src/store/useTasksStore.ts`)
 - **ESLint 10** (flat config) + **Prettier** — линт и форматирование
 - **Vitest** + **Testing Library** — юнит- и компонентные тесты
 
@@ -80,5 +80,5 @@ npm install
 `@/*` указывает на `src/*` (настроено в `vite.config.ts` и `tsconfig.app.json`), например:
 
 ```ts
-import { Counter } from '@/components/Counter'
+import { Button } from '@/components/ui/Button'
 ```

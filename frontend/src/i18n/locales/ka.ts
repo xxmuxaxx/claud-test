@@ -2,31 +2,46 @@ import type { Translation } from './ru'
 
 const ka: Translation = {
   nav: {
-    home: 'მთავარი',
     tasks: 'დავალებების სია',
-    about: 'შესახებ',
     wiki: 'ვიკი',
+    games: 'თამაშები',
   },
   language: {
     label: 'ენა',
   },
-  home: {
-    title: 'კეთილი იყოს თქვენი მობრძანება',
-    intro:
-      'სასტარტო პროექტი: React 19 + Vite + TypeScript + Tailwind CSS v4 + React Router + Zustand. შეცვალეთ <code>src/pages/HomePage.tsx</code> და შეინახეთ, რომ იხილოთ ცხელი გადატვირთვა.',
-  },
-  about: {
-    title: 'შესახებ',
-    body: 'ეს სასტარტო პროექტი აგებულია Vite-ით სწრაფი აწყობისა და HMR-ისთვის, TypeScript-ით ტიპური უსაფრთხოებისთვის, Tailwind CSS-ით სტილიზაციისთვის, React Router-ით ნავიგაციისთვის, Zustand-ით მდგომარეობის მართვისთვის და Vitest + Testing Library-ით ტესტირებისთვის.',
+  games: {
+    title: 'თამაშები',
+    intro: 'აირჩიეთ თამაში და ითამაშეთ პირდაპირ ბრაუზერში.',
+    play: 'თამაში',
+    back: '← უკან თამაშებზე',
+    score: 'ქულა: {{score}}',
+    highScore: 'რეკორდი: {{score}}',
+    snake: {
+      title: 'გველი',
+      description: 'კლასიკური თამაში „გველი“: მიირთვით, გაიზარდეთ და ნუ შეასკდებით.',
+      board: 'სათამაშო ველი',
+      startHint: 'დააჭირეთ „დაწყებას“ ან ისარს',
+      start: 'დაწყება',
+      pause: 'პაუზა',
+      resume: 'გაგრძელება',
+      paused: 'პაუზა',
+      restart: 'თავიდან დაწყება',
+      gameOver: 'თამაში დასრულდა',
+      won: 'გამარჯვება!',
+      finalScore: 'თქვენი ქულა: {{score}}',
+      keysHint: 'ისრები ან W/A/S/D — მოძრაობა, გამოტოვება ან P — პაუზა',
+      controls: {
+        label: 'მართვა',
+        up: 'ზემოთ',
+        down: 'ქვემოთ',
+        left: 'მარცხნივ',
+        right: 'მარჯვნივ',
+      },
+    },
   },
   notFound: {
     message: 'გვერდი ვერ მოიძებნა.',
-    back: 'მთავარ გვერდზე დაბრუნება',
-  },
-  counter: {
-    increment: 'გაზრდა',
-    decrement: 'შემცირება',
-    reset: 'განულება',
+    back: 'დავალებების სიაში დაბრუნება',
   },
   common: {
     cancel: 'გაუქმება',

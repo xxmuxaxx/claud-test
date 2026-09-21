@@ -2,31 +2,46 @@ import type { Translation } from './ru'
 
 const en: Translation = {
   nav: {
-    home: 'Home',
     tasks: 'To-do list',
-    about: 'About',
     wiki: 'Wiki',
+    games: 'Games',
   },
   language: {
     label: 'Language',
   },
-  home: {
-    title: 'Welcome',
-    intro:
-      'Starter project: React 19 + Vite + TypeScript + Tailwind CSS v4 + React Router + Zustand. Edit <code>src/pages/HomePage.tsx</code> and save to see hot reloading.',
-  },
-  about: {
-    title: 'About',
-    body: 'This starter is built with Vite for fast builds and HMR, TypeScript for type safety, Tailwind CSS for styling, React Router for navigation, Zustand for state management, and Vitest + Testing Library for tests.',
+  games: {
+    title: 'Games',
+    intro: 'Pick a game and play right in your browser.',
+    play: 'Play',
+    back: '← Back to games',
+    score: 'Score: {{score}}',
+    highScore: 'High score: {{score}}',
+    snake: {
+      title: 'Snake',
+      description: 'The classic Snake game: eat, grow and avoid crashing.',
+      board: 'Game board',
+      startHint: 'Press Start or an arrow key',
+      start: 'Start',
+      pause: 'Pause',
+      resume: 'Resume',
+      paused: 'Paused',
+      restart: 'Play again',
+      gameOver: 'Game Over',
+      won: 'You win!',
+      finalScore: 'Your score: {{score}}',
+      keysHint: 'Arrow keys or W/A/S/D to move, Space or P to pause',
+      controls: {
+        label: 'Controls',
+        up: 'Up',
+        down: 'Down',
+        left: 'Left',
+        right: 'Right',
+      },
+    },
   },
   notFound: {
     message: 'Page not found.',
-    back: 'Go back home',
-  },
-  counter: {
-    increment: 'Increment',
-    decrement: 'Decrement',
-    reset: 'Reset',
+    back: 'Go to the to-do list',
   },
   common: {
     cancel: 'Cancel',

@@ -1,6 +1,6 @@
 # Modern React App
 
-React 19 + Vite + TypeScript + Tailwind CSS v4 + React Router 8 + Zustand. Sections: `/` (counter), `/tasks` (to-do list), `/wiki` (personal Markdown wiki), `/about`. Repo layout: `frontend/` (React app, own `package.json`), `backend/` (Fastify + Prisma REST API, own `package.json`; see `backend/README.md`), and the shared `docker-compose.yml` at the root. Tasks and Wiki data live in PostgreSQL behind the API. Paths like `src/...` below are relative to `frontend/`. The user communicates in Russian.
+React 19 + Vite + TypeScript + Tailwind CSS v4 + React Router 8 + Zustand. Sections: `/tasks` (to-do list), `/wiki` (personal Markdown wiki), `/games` (games; Snake at `/games/snake`). `/` redirects to `/tasks`. Repo layout: `frontend/` (React app, own `package.json`), `backend/` (Fastify + Prisma REST API, own `package.json`; see `backend/README.md`), and the shared `docker-compose.yml` at the root. Tasks and Wiki data live in PostgreSQL behind the API. Paths like `src/...` below are relative to `frontend/`. The user communicates in Russian.
 
 ## Commands
 
@@ -33,7 +33,7 @@ Before committing, `typecheck`, `lint`, `format:check` and `test` must pass in b
 - Loading states: never render `null` while waiting. First load → a skeleton wrapped in `LoadingRegion` (`role=status`, announces `common.loading`; see `TasksSkeleton`, `WikiSkeletons`). A refetch that keeps the old data on screen (search, filters) → `aria-busy` + dimming (`aria-busy:opacity-60`). A write in flight → `<Button loading>` (spinner, disabled, `aria-busy`).
 - Errors are `ApiError` (`status`, `code`; `status 0` = server unreachable). Show them with `<ErrorNotice>` (`errors.*` i18n keys); failed writes keep the form/dialog open.
 - Tests never hit a network: `src/test/setup.ts` installs `fetch` = the in-memory `backend` from `src/test/fakeBackend.ts`, which mirrors the real API contract (seed with `backend.seedTasks/seedArticles`, inspect `backend.tasks/articles/requests`, simulate an outage with `backend.offline = true`). If the real API changes, change the fake too; the real API is covered by `backend/test`.
-- The only remaining `localStorage` use is the UI language (`app.language`). Old `tasks` / `wiki_articles` keys from the pre-backend version are ignored, not migrated.
+- `localStorage` is used only for the UI language (`app.language`) and game high scores (`games.<game>.highScore`). Old `tasks` / `wiki_articles` keys from the pre-backend version are ignored, not migrated.
 
 ## Tasks (`/tasks`)
 
@@ -46,6 +46,12 @@ Before committing, `typecheck`, `lint`, `format:check` and `test` must pass in b
 - The wide container is opted into per route with `handle: { wide: true }` (read by `Layout`).
 - Sidebar (desktop) vs. slide-out menu and split vs. tabbed editor are chosen in JS by `useIsDesktop` (matchMedia, `lg` = 1024px), not CSS, so only one variant is in the DOM. jsdom has no `matchMedia`, so tests get the narrow layout; stub `matchMedia` for desktop (see `WikiPages.test.tsx`).
 - Markdown is rendered by `MarkdownView` (react-markdown + remark-gfm; raw HTML is not rendered). The article title is the page `<h1>`, so Markdown headings are shifted one level down (`#` → `<h2>`) and styled by the `.wiki-h1..6` classes in `index.css`, not by tag. Tags are stored normalized (lowercase, no `#`).
+
+## Games (`/games`)
+
+- Fully client-side (no API, no store): a game's state is a `useReducer` in a hook. Snake rules are pure functions in `src/lib/snake.ts` (randomness is passed in; unit-tested in `snake.test.ts`); `hooks/useSnakeGame` runs the `setInterval` loop, `hooks/useSnakeKeyboard` maps arrows / W-A-S-D (by `event.code`, so any layout) and Space/P; `hooks/useHighScore(key, score)` keeps the record in `localStorage` (safe when storage is blocked). The board is plain DOM (segments positioned in %), no canvas.
+- Catalog: `pages/games/catalog.ts` (`games: GameDefinition[]`, see `types/game.ts`) drives both the `/games` cards and the routes (`/games/:id`). To add a game: logic in `lib/`, components in `components/games/`, a page in `pages/games/`, one catalog entry, and `games.<id>.*` i18n keys. Shared pieces: `GamePageLayout` (back link + title), `ScoreBoard`, `GameCard`.
+- Component tests use fake timers and `Math.random` mocked to `0` (first food lands on the top-left cell); keys are dispatched on `window`.
 
 ## i18n (ru / en / ka)
 

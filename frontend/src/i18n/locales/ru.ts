@@ -1,30 +1,45 @@
 const ru = {
   nav: {
-    home: 'Главная',
     tasks: 'Список дел',
-    about: 'О проекте',
     wiki: 'Wiki',
+    games: 'Игры',
   },
   language: {
     label: 'Язык',
   },
-  home: {
-    title: 'Добро пожаловать',
-    intro:
-      'Стартовый проект: React 19 + Vite + TypeScript + Tailwind CSS v4 + React Router + Zustand. Отредактируйте <code>src/pages/HomePage.tsx</code> и сохраните, чтобы увидеть горячую перезагрузку.',
-  },
-  about: {
-    title: 'О проекте',
-    body: 'Этот стартовый проект построен на Vite для быстрой сборки и HMR, TypeScript для типобезопасности, Tailwind CSS для стилизации, React Router для навигации, Zustand для управления состоянием и Vitest + Testing Library для тестов.',
+  games: {
+    title: 'Игры',
+    intro: 'Выберите игру и играйте прямо в браузере.',
+    play: 'Играть',
+    back: '← Назад к играм',
+    score: 'Счёт: {{score}}',
+    highScore: 'Рекорд: {{score}}',
+    snake: {
+      title: 'Змейка',
+      description: 'Классическая игра Snake: ешьте, растите и не врезайтесь.',
+      board: 'Игровое поле',
+      startHint: 'Нажмите «Старт» или клавишу-стрелку',
+      start: 'Старт',
+      pause: 'Пауза',
+      resume: 'Продолжить',
+      paused: 'Пауза',
+      restart: 'Начать заново',
+      gameOver: 'Game Over',
+      won: 'Победа!',
+      finalScore: 'Ваш счёт: {{score}}',
+      keysHint: 'Стрелки или W/A/S/D — движение, пробел или P — пауза',
+      controls: {
+        label: 'Управление',
+        up: 'Вверх',
+        down: 'Вниз',
+        left: 'Влево',
+        right: 'Вправо',
+      },
+    },
   },
   notFound: {
     message: 'Страница не найдена.',
-    back: 'Вернуться на главную',
-  },
-  counter: {
-    increment: 'Увеличить',
-    decrement: 'Уменьшить',
-    reset: 'Сбросить',
+    back: 'К списку дел',
   },
   common: {
     cancel: 'Отмена',
