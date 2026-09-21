@@ -7,6 +7,12 @@ const ru = {
   language: {
     label: 'Язык',
   },
+  theme: {
+    label: 'Тема',
+    system: 'Системная',
+    light: 'Светлая',
+    dark: 'Тёмная',
+  },
   games: {
     title: 'Игры',
     intro: 'Выберите игру и играйте прямо в браузере.',

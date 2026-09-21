@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
 import { cn } from '@/lib/cn'
 import { LanguageSwitcher } from './LanguageSwitcher'
+import { ThemeSwitcher } from './ThemeSwitcher'
 
 const links = [
   { to: '/tasks', labelKey: 'nav.tasks' },
@@ -38,7 +39,10 @@ export function Navbar({ wide = false }: { wide?: boolean }) {
               </li>
             ))}
           </ul>
-          <LanguageSwitcher />
+          <div className="flex items-center gap-2">
+            <ThemeSwitcher />
+            <LanguageSwitcher />
+          </div>
         </div>
       </nav>
     </header>

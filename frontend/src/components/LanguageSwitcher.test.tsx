@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { LANGUAGE_STORAGE_KEY } from '@/i18n'
@@ -18,9 +18,12 @@ function renderShell() {
 describe('LanguageSwitcher', () => {
   it('lists the three languages by their own names', () => {
     renderShell()
-    const options = screen.getAllByRole('option').map((option) => option.textContent)
+    const select = screen.getByRole('combobox', { name: 'Язык' })
+    const options = within(select)
+      .getAllByRole('option')
+      .map((option) => option.textContent)
     expect(options).toEqual(['Русский', 'English', 'ქართული'])
-    expect(screen.getByRole('combobox', { name: 'Язык' })).toHaveValue('ru')
+    expect(select).toHaveValue('ru')
   })
 
   it('switches the whole UI, <html lang> and remembers the choice', async () => {

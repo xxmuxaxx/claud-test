@@ -9,6 +9,12 @@ const ka: Translation = {
   language: {
     label: 'ენა',
   },
+  theme: {
+    label: 'თემა',
+    system: 'სისტემური',
+    light: 'ღია',
+    dark: 'მუქი',
+  },
   games: {
     title: 'თამაშები',
     intro: 'აირჩიეთ თამაში და ითამაშეთ პირდაპირ ბრაუზერში.',

@@ -9,6 +9,12 @@ const en: Translation = {
   language: {
     label: 'Language',
   },
+  theme: {
+    label: 'Theme',
+    system: 'System',
+    light: 'Light',
+    dark: 'Dark',
+  },
   games: {
     title: 'Games',
     intro: 'Pick a game and play right in your browser.',
