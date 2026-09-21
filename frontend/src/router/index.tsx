@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate, type RouteObject } from 'react-router'
 import { Layout } from '@/components/Layout'
 import { WikiLayout } from '@/components/wiki/WikiLayout'
 import { TasksPage } from '@/pages/TasksPage'
+import { NeuralNetworkPage } from '@/pages/NeuralNetworkPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { WikiArticlePage } from '@/pages/wiki/WikiArticlePage'
 import { WikiEditorPage } from '@/pages/wiki/WikiEditorPage'
@@ -35,6 +36,11 @@ export const routes: RouteObject[] = [
           { index: true, element: <GamesPage /> },
           ...games.map(({ id, Page }) => ({ path: id, element: <Page /> })),
         ],
+      },
+      {
+        path: 'neural-network',
+        element: <NeuralNetworkPage />,
+        handle: { wide: true }, // The lab has a settings column next to the drawings.
       },
       { path: '*', element: <NotFoundPage /> },
     ],

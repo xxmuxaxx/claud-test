@@ -8,6 +8,7 @@ const links = [
   { to: '/tasks', labelKey: 'nav.tasks' },
   { to: '/wiki', labelKey: 'nav.wiki' },
   { to: '/games', labelKey: 'nav.games' },
+  { to: '/neural-network', labelKey: 'nav.neuralNetwork' },
 ] as const
 
 export function Navbar({ wide = false }: { wide?: boolean }) {
