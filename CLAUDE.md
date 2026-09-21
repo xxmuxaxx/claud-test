@@ -34,6 +34,6 @@ Before committing, `typecheck`, `lint`, `format:check` and `test` must all pass.
 ## Git / environment
 
 - Work in feature branches (`feature/...`, `chore/...`); merge into `main` fast-forward. There is no remote. Commit only when asked.
-- Windows with `core.autocrlf=true`: `git status` may list many files as modified with an empty diff (line endings only). Run `git update-index -q --refresh` and check `git diff --stat` before assuming files changed. Prettier normalizes the working tree to LF; that is expected.
+- Line endings: `.gitattributes` forces LF in the repo and the working tree (Prettier expects LF), overriding the global `core.autocrlf=true`. If `git status` still lists many files as modified with an empty diff, it is stale stat data or leftover CRLF from before this rule — run `git update-index -q --refresh` and check `git diff --stat` before assuming files changed.
 - Git can briefly hold `.git/index.lock` because the desktop app polls the repo; retry before deleting anything.
 - The built-in preview browser lacks Georgian ICU data, so `Intl` dates render in Russian there. Verify Georgian dates in Node or a regular browser.
