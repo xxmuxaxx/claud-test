@@ -7,6 +7,7 @@ import { buttonClass } from '@/components/ui/buttonClass'
 import { fieldClass } from '@/components/ui/fieldClass'
 import { ArticleList } from '@/components/wiki/ArticleList'
 import { CompactArticleList } from '@/components/wiki/CompactArticleList'
+import { ArticleListPageSkeleton } from '@/components/wiki/WikiSkeletons'
 import { WikiEmptyState } from '@/components/wiki/WikiEmptyState'
 import { useWikiOutletContext } from '@/components/wiki/wikiOutletContext'
 import { useArticleList } from '@/hooks/useArticles'
@@ -43,7 +44,9 @@ export function WikiHomePage() {
   const isCurrent = debouncedSearch === search && !list.isStale
 
   if (list.status === 'error') return <ErrorNotice error={list.error} onRetry={list.reload} />
-  if (status !== 'ready' || list.data === undefined) return null
+  if (status !== 'ready' || list.data === undefined) {
+    return <ArticleListPageSkeleton withSearch />
+  }
 
   const articles = list.data
   const isEmpty = total === 0
@@ -134,7 +137,10 @@ export function WikiHomePage() {
             </div>
           )}
 
-          <section className="space-y-3">
+          <section
+            aria-busy={!isCurrent || undefined}
+            className="space-y-3 transition-opacity aria-busy:opacity-60"
+          >
             <h2 className="text-lg font-semibold tracking-tight">
               {isFiltering ? t('wiki.results') : t('wiki.allArticles')}
             </h2>

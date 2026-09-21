@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, NavLink, useMatch, useNavigate } from 'react-router'
 import { BookOpen, Plus, Search } from 'lucide-react'
 import { buttonClass } from '@/components/ui/buttonClass'
+import { Skeleton } from '@/components/ui/Skeleton'
 import { fieldClass } from '@/components/ui/fieldClass'
 import { cn } from '@/lib/cn'
 import { tagPath } from '@/lib/wiki'
@@ -35,7 +36,8 @@ export function WikiSidebar({
   const { t } = useTranslation()
   const navigate = useNavigate()
   const isIndex = useMatch({ path: '/wiki', end: true }) !== null
-  const { tags: tagCounts, total } = useWikiStore()
+  const { tags: tagCounts, total, status } = useWikiStore()
+  const loading = status === 'idle' || status === 'loading'
 
   function handleQueryChange(value: string) {
     onQueryChange(value)
@@ -75,10 +77,19 @@ export function WikiSidebar({
         <li>
           <NavLink to="/wiki" end onClick={onNavigate} className={itemClass}>
             {t('wiki.allArticles')}
-            <span className={countClass}>{total}</span>
+            {!loading && <span className={countClass}>{total}</span>}
           </NavLink>
         </li>
       </ul>
+
+      {loading && (
+        // Silent: the page itself announces that it is loading.
+        <div className="space-y-2 px-3">
+          <Skeleton className="h-7" />
+          <Skeleton className="h-7" />
+          <Skeleton className="h-7" />
+        </div>
+      )}
 
       {tagCounts.length > 0 && (
         <div className="space-y-2">

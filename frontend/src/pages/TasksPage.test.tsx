@@ -38,7 +38,39 @@ describe('TasksPage', () => {
       stats: { total: 0, active: 0, completed: 0 },
       view: DEFAULT_TASK_VIEW,
       status: 'idle',
+      refreshing: false,
       error: undefined,
+    })
+  })
+
+  describe('loading', () => {
+    it('shows a placeholder until the first response arrives', async () => {
+      backend.seedTasks(sample)
+      render(<TasksPage />)
+
+      expect(screen.getByRole('status')).toHaveTextContent('Загрузка…')
+      await screen.findByPlaceholderText('Поиск дел...')
+      expect(screen.queryByRole('status')).not.toBeInTheDocument()
+    })
+
+    it('keeps the save button busy until the backend answers', async () => {
+      const user = await renderPage()
+      const answer = backend.fetch.getMockImplementation()!
+      let release = () => {}
+      const held = new Promise<void>((resolve) => (release = resolve))
+      backend.fetch.mockImplementation(async (...args) => {
+        const [, init] = args
+        if (init?.method === 'POST') await held
+        return answer(...args)
+      })
+
+      await user.click(screen.getAllByRole('button', { name: 'Добавить дело' })[0])
+      await user.type(screen.getByLabelText('Название'), 'Новое дело')
+      await user.click(screen.getByRole('button', { name: 'Создать' }))
+
+      expect(screen.getByRole('button', { name: 'Создать' })).toBeDisabled()
+      release()
+      await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
     })
   })
 

@@ -30,6 +30,7 @@ const en: Translation = {
   },
   common: {
     cancel: 'Cancel',
+    loading: 'Loading…',
   },
   errors: {
     network: 'Cannot reach the server. Check that the backend is running.',

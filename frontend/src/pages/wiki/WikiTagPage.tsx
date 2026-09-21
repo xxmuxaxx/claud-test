@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router'
 import { ArrowLeft } from 'lucide-react'
 import { ErrorNotice } from '@/components/ErrorNotice'
 import { ArticleList } from '@/components/wiki/ArticleList'
+import { ArticleListPageSkeleton } from '@/components/wiki/WikiSkeletons'
 import { useArticleList } from '@/hooks/useArticles'
 
 /** `/wiki/tags/:tag` — every article carrying one tag (the backend filters, newest update first). */
@@ -13,7 +14,7 @@ export function WikiTagPage() {
 
   if (list.status === 'error') return <ErrorNotice error={list.error} onRetry={list.reload} />
   // A new tag never shows the previous tag's articles while its own are loading.
-  if (list.data === undefined || list.isStale) return null
+  if (list.data === undefined || list.isStale) return <ArticleListPageSkeleton />
 
   return (
     <div className="space-y-8">

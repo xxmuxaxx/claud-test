@@ -4,12 +4,14 @@ import { TaskItem } from './TaskItem'
 
 interface TasksListProps {
   tasks: Task[]
+  /** New results are being fetched; the current ones are shown dimmed meanwhile. */
+  busy?: boolean
   onToggle: (id: string) => void
   onEdit: (task: Task) => void
   onDelete: (task: Task) => void
 }
 
-export function TasksList({ tasks, onToggle, onEdit, onDelete }: TasksListProps) {
+export function TasksList({ tasks, busy = false, onToggle, onEdit, onDelete }: TasksListProps) {
   const { t } = useTranslation()
 
   if (tasks.length === 0) {
@@ -21,7 +23,7 @@ export function TasksList({ tasks, onToggle, onEdit, onDelete }: TasksListProps)
   }
 
   return (
-    <ul className="space-y-3">
+    <ul aria-busy={busy || undefined} className="space-y-3 transition-opacity aria-busy:opacity-60">
       {tasks.map((task) => (
         <TaskItem
           key={task.id}

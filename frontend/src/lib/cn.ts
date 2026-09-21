@@ -1,9 +1,7 @@
-type ClassValue = string | number | null | boolean | undefined
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
-/**
- * Tiny className joiner (no extra dependency needed for a starter project).
- * Swap for `clsx` + `tailwind-merge` if the project grows more complex class logic.
- */
+/** Joins class names and resolves conflicting Tailwind utilities: the last one wins. */
 export function cn(...values: ClassValue[]): string {
-  return values.filter(Boolean).join(' ')
+  return twMerge(clsx(values))
 }

@@ -11,6 +11,8 @@ interface TasksState {
   /** The view `tasks` was loaded for; mutations reload it. */
   view: TaskView
   status: 'idle' | 'loading' | 'ready' | 'error'
+  /** A request is in flight while `tasks` still shows the previous result. */
+  refreshing: boolean
   error: unknown
   /** Loads the tasks for `view` (search, filters and sorting are done by the backend). */
   load: (view: TaskView) => Promise<void>
@@ -34,19 +36,25 @@ export const useTasksStore = create<TasksState>((set, get) => {
     stats: EMPTY_STATS,
     view: DEFAULT_TASK_VIEW,
     status: 'idle',
+    refreshing: false,
     error: undefined,
 
     load: async (view) => {
       const request = ++latestLoad
-      set((state) => ({ view, status: state.status === 'ready' ? 'ready' : 'loading' }))
+      set((state) => ({
+        view,
+        status: state.status === 'ready' ? 'ready' : 'loading',
+        refreshing: state.status === 'ready',
+      }))
       try {
         const [tasks, stats] = await Promise.all([
           tasksApi.list(toTaskQuery(view)),
           tasksApi.stats(),
         ])
-        if (request === latestLoad) set({ tasks, stats, status: 'ready', error: undefined })
+        if (request === latestLoad)
+          set({ tasks, stats, status: 'ready', refreshing: false, error: undefined })
       } catch (error) {
-        if (request === latestLoad) set({ status: 'error', error })
+        if (request === latestLoad) set({ status: 'error', refreshing: false, error })
       }
     },
 

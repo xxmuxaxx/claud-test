@@ -30,6 +30,7 @@ const ka: Translation = {
   },
   common: {
     cancel: 'გაუქმება',
+    loading: 'იტვირთება…',
   },
   errors: {
     network: 'სერვერთან დაკავშირება ვერ მოხერხდა. შეამოწმეთ, გაშვებულია თუ არა backend.',

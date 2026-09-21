@@ -7,11 +7,13 @@ import { PRIORITIES, type Task, type TaskInput, type TaskPriority } from '@/type
 interface TaskFormProps {
   /** When provided the form edits this task, otherwise it creates a new one. */
   task?: Task
+  /** The change is being sent: the submit button shows a spinner. */
+  submitting?: boolean
   onSubmit: (input: TaskInput) => void
   onCancel: () => void
 }
 
-export function TaskForm({ task, onSubmit, onCancel }: TaskFormProps) {
+export function TaskForm({ task, submitting = false, onSubmit, onCancel }: TaskFormProps) {
   const { t } = useTranslation()
   const [title, setTitle] = useState(task?.title ?? '')
   const [description, setDescription] = useState(task?.description ?? '')
@@ -110,7 +112,9 @@ export function TaskForm({ task, onSubmit, onCancel }: TaskFormProps) {
         <Button variant="secondary" onClick={onCancel}>
           {t('common.cancel')}
         </Button>
-        <Button type="submit">{task ? t('tasks.form.save') : t('tasks.form.create')}</Button>
+        <Button type="submit" loading={submitting}>
+          {task ? t('tasks.form.save') : t('tasks.form.create')}
+        </Button>
       </div>
     </form>
   )

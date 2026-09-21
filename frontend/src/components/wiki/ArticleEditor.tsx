@@ -191,7 +191,7 @@ export function ArticleEditor({ article }: ArticleEditorProps) {
       {saveError !== null && <ErrorNotice error={saveError} />}
 
       <div className="flex gap-3">
-        <Button type="submit" disabled={saving}>
+        <Button type="submit" loading={saving}>
           {t('wiki.editor.save')}
         </Button>
         <Link to={article ? `/wiki/${article.id}` : '/wiki'} className={buttonClass('secondary')}>

@@ -8,6 +8,7 @@ import { DeleteArticleDialog } from '@/components/wiki/DeleteArticleDialog'
 import { MarkdownView } from '@/components/wiki/MarkdownView'
 import { RelatedArticles } from '@/components/wiki/RelatedArticles'
 import { TagList } from '@/components/wiki/TagList'
+import { ArticlePageSkeleton } from '@/components/wiki/WikiSkeletons'
 import { Button } from '@/components/ui/Button'
 import { buttonClass } from '@/components/ui/buttonClass'
 import { formatFullDate } from '@/lib/dates'
@@ -21,21 +22,25 @@ export function WikiArticlePage() {
   const removeArticle = useWikiStore((state) => state.removeArticle)
   const [confirmingDelete, setConfirmingDelete] = useState(false)
   const [deleteError, setDeleteError] = useState<unknown>(null)
+  const [deleting, setDeleting] = useState(false)
 
   const { data: article, status, error, reload } = useArticle(articleId)
   const { data: related = [] } = useRelatedArticles(articleId)
 
   if (status === 'error') return <ErrorNotice error={error} onRetry={reload} />
-  if (article === undefined) return null
+  if (article === undefined) return <ArticlePageSkeleton />
   if (article === null) return <ArticleNotFound />
 
   async function handleDelete() {
     if (!article) return
+    setDeleteError(null)
+    setDeleting(true)
     try {
       await removeArticle(article.id)
       void navigate('/wiki')
     } catch (failure) {
       setDeleteError(failure)
+      setDeleting(false)
     }
   }
 
@@ -91,6 +96,7 @@ export function WikiArticlePage() {
               </div>
             )
           }
+          deleting={deleting}
           onConfirm={() => void handleDelete()}
           onCancel={() => {
             setConfirmingDelete(false)

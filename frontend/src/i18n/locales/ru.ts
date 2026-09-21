@@ -28,6 +28,7 @@ const ru = {
   },
   common: {
     cancel: 'Отмена',
+    loading: 'Загрузка…',
   },
   errors: {
     network: 'Не удаётся связаться с сервером. Проверьте, что backend запущен.',

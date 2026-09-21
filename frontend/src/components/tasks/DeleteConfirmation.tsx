@@ -8,11 +8,19 @@ interface DeleteConfirmationProps {
   task: Task
   /** Shown above the buttons when deleting failed. */
   error?: ReactNode
+  /** The deletion is being sent: the confirm button shows a spinner. */
+  deleting?: boolean
   onConfirm: () => void
   onCancel: () => void
 }
 
-export function DeleteConfirmation({ task, error, onConfirm, onCancel }: DeleteConfirmationProps) {
+export function DeleteConfirmation({
+  task,
+  error,
+  deleting = false,
+  onConfirm,
+  onCancel,
+}: DeleteConfirmationProps) {
   const { t } = useTranslation()
 
   return (
@@ -26,7 +34,7 @@ export function DeleteConfirmation({ task, error, onConfirm, onCancel }: DeleteC
         <Button variant="secondary" onClick={onCancel}>
           {t('common.cancel')}
         </Button>
-        <Button variant="danger" onClick={onConfirm}>
+        <Button variant="danger" loading={deleting} onClick={onConfirm}>
           {t('tasks.delete.confirm')}
         </Button>
       </div>

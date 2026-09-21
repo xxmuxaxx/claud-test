@@ -22,13 +22,15 @@ Before committing, `typecheck`, `lint`, `format:check` and `test` must pass in b
 ## Conventions
 
 - `@/*` is an alias for `src/*`. Prettier: no semicolons, single quotes, 100 columns.
-- `cn()` (`src/lib/cn.ts`) only joins class names — it does **not** resolve conflicting Tailwind classes (no `tailwind-merge`). Don't pass two utilities for the same property expecting the last one to win.
+- `cn()` (`src/lib/cn.ts`) is `clsx` + `tailwind-merge`: conflicting Tailwind utilities resolve to the last one, so a `className` prop can override a component's defaults.
+- UI kit (shadcn/ui style: `class-variance-authority` + `clsx` + `tailwind-merge`, components live in `src/components/ui`, no CLI and no CSS-variable theme — dark mode is the `prefers-color-scheme` `dark:` variant). `Button` (`variant`, `loading`), `buttonClass()` for links that look like buttons, `Modal`, `Skeleton`, `Spinner`, `LoadingRegion`. Add new primitives there, by hand.
 - Business logic lives in `src/lib` (pure, unit-tested) and `src/store`; components stay thin.
 
 ## Data & API layer
 
 - Layers: UI → Zustand store / data hooks → `src/api/*` (`tasksApi`, `articlesApi`, `tagsApi`) → `src/api/http.ts` (the only `fetch`). Components never call `fetch` or `src/api` directly. Backend URL: `VITE_API_BASE_URL` (default `http://localhost:3000/api/v1`; baked in at build time, a build arg in `frontend/Dockerfile`); the backend's `CORS_ORIGIN` must contain the frontend origin.
 - Search, filters and sorting are done by the backend, never in the browser. Typing is debounced (`useDebouncedValue`, 250 ms). The API layer maps the wire format to the frontend models (`null` → `undefined`); the frontend `Task` has no timestamps.
+- Loading states: never render `null` while waiting. First load → a skeleton wrapped in `LoadingRegion` (`role=status`, announces `common.loading`; see `TasksSkeleton`, `WikiSkeletons`). A refetch that keeps the old data on screen (search, filters) → `aria-busy` + dimming (`aria-busy:opacity-60`). A write in flight → `<Button loading>` (spinner, disabled, `aria-busy`).
 - Errors are `ApiError` (`status`, `code`; `status 0` = server unreachable). Show them with `<ErrorNotice>` (`errors.*` i18n keys); failed writes keep the form/dialog open.
 - Tests never hit a network: `src/test/setup.ts` installs `fetch` = the in-memory `backend` from `src/test/fakeBackend.ts`, which mirrors the real API contract (seed with `backend.seedTasks/seedArticles`, inspect `backend.tasks/articles/requests`, simulate an outage with `backend.offline = true`). If the real API changes, change the fake too; the real API is covered by `backend/test`.
 - The only remaining `localStorage` use is the UI language (`app.language`). Old `tasks` / `wiki_articles` keys from the pre-backend version are ignored, not migrated.

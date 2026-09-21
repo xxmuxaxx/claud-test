@@ -6,11 +6,18 @@ import { Modal } from '@/components/ui/Modal'
 interface DeleteArticleDialogProps {
   /** Shown above the buttons when deleting failed. */
   error?: ReactNode
+  /** The deletion is being sent: the confirm button shows a spinner. */
+  deleting?: boolean
   onConfirm: () => void
   onCancel: () => void
 }
 
-export function DeleteArticleDialog({ error, onConfirm, onCancel }: DeleteArticleDialogProps) {
+export function DeleteArticleDialog({
+  error,
+  deleting = false,
+  onConfirm,
+  onCancel,
+}: DeleteArticleDialogProps) {
   const { t } = useTranslation()
 
   return (
@@ -24,7 +31,7 @@ export function DeleteArticleDialog({ error, onConfirm, onCancel }: DeleteArticl
         <Button variant="secondary" onClick={onCancel}>
           {t('common.cancel')}
         </Button>
-        <Button variant="danger" onClick={onConfirm}>
+        <Button variant="danger" loading={deleting} onClick={onConfirm}>
           {t('wiki.delete.confirm')}
         </Button>
       </div>
