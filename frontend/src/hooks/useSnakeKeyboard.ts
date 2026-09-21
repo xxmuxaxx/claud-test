@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { isButtonLike, isEditable } from '@/lib/keyboard'
 import { KEY_DIRECTIONS } from '@/lib/snake'
 import type { Direction } from '@/types/snake'
 
@@ -6,13 +7,6 @@ interface SnakeKeyboardHandlers {
   onDirection: (direction: Direction) => void
   onTogglePause: () => void
 }
-
-const isEditable = (target: EventTarget | null) =>
-  target instanceof HTMLElement &&
-  (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))
-
-const isButtonLike = (target: EventTarget | null) =>
-  target instanceof HTMLElement && ['BUTTON', 'A'].includes(target.tagName)
 
 /** Arrows and W/A/S/D steer; Space or P toggles pause. Active while the game is mounted. */
 export function useSnakeKeyboard({ onDirection, onTogglePause }: SnakeKeyboardHandlers) {

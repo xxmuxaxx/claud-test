@@ -17,6 +17,11 @@ describe('games pages', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Игры' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { level: 2, name: 'Змейка' })).toBeInTheDocument()
     expect(screen.getByText(/классическая игра snake/i)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 2, name: '2048' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /играть: 2048/i })).toHaveAttribute(
+      'href',
+      '/games/2048',
+    )
     expect(screen.getByRole('link', { name: /играть: змейка/i })).toHaveAttribute(
       'href',
       '/games/snake',
@@ -37,6 +42,18 @@ describe('games pages', () => {
     await user.click(screen.getByRole('link', { name: '← Назад к играм' }))
     expect(router.state.location.pathname).toBe('/games')
     expect(screen.getByRole('heading', { level: 1, name: 'Игры' })).toBeInTheDocument()
+  })
+
+  it('opens 2048 from its card', async () => {
+    const user = userEvent.setup()
+    const router = renderAt('/games')
+
+    await user.click(screen.getByRole('link', { name: /играть: 2048/i }))
+
+    expect(router.state.location.pathname).toBe('/games/2048')
+    expect(screen.getByRole('heading', { level: 1, name: '2048' })).toBeInTheDocument()
+    expect(screen.getByRole('list', { name: 'Игровое поле' })).toBeInTheDocument()
+    expect(screen.getByText('Счёт: 0')).toBeInTheDocument()
   })
 
   it('has a Games link in the navbar', async () => {
