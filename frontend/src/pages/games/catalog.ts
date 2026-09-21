@@ -1,5 +1,7 @@
+import { Game2048Preview } from '@/components/games/Game2048Preview'
 import { SnakePreview } from '@/components/games/SnakePreview'
 import type { GameDefinition } from '@/types/game'
+import { Game2048Page } from './Game2048Page'
 import { SnakePage } from './SnakePage'
 
 /**
@@ -13,5 +15,12 @@ export const games: GameDefinition[] = [
     descriptionKey: 'games.snake.description',
     Preview: SnakePreview,
     Page: SnakePage,
+  },
+  {
+    id: '2048',
+    titleKey: 'games.2048.title',
+    descriptionKey: 'games.2048.description',
+    Preview: Game2048Preview,
+    Page: Game2048Page,
   },
 ]

@@ -13,6 +13,38 @@
   --color-brand-900: oklch(0.31 0.11 262);
 
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /*
+   * 2048 tiles. The slide is a 100ms transform transition (Game2048Board); new and merged tiles wait
+   * for it with a 100ms delay. `backwards` keeps them invisible (the 0% keyframe) until they start.
+   */
+  --animate-tile-appear: tile-appear 150ms ease-out 100ms backwards;
+  --animate-tile-merge: tile-merge 200ms ease-out 100ms backwards;
+
+  @keyframes tile-appear {
+    from {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes tile-merge {
+    from {
+      opacity: 0;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 }
 
 body {
