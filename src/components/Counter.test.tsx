@@ -18,11 +18,11 @@ describe('Counter', () => {
     const user = userEvent.setup()
     render(<Counter />)
 
-    await user.click(screen.getByLabelText('Increment'))
-    await user.click(screen.getByLabelText('Increment'))
+    await user.click(screen.getByLabelText('Увеличить'))
+    await user.click(screen.getByLabelText('Увеличить'))
     expect(screen.getByText('2')).toBeInTheDocument()
 
-    await user.click(screen.getByLabelText('Decrement'))
+    await user.click(screen.getByLabelText('Уменьшить'))
     expect(screen.getByText('1')).toBeInTheDocument()
   })
 
@@ -30,8 +30,8 @@ describe('Counter', () => {
     const user = userEvent.setup()
     render(<Counter />)
 
-    await user.click(screen.getByLabelText('Increment'))
-    await user.click(screen.getByText('Reset'))
+    await user.click(screen.getByLabelText('Увеличить'))
+    await user.click(screen.getByText('Сбросить'))
     expect(screen.getByText('0')).toBeInTheDocument()
   })
 })

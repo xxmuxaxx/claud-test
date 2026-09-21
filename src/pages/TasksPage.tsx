@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { DeleteConfirmation } from '@/components/tasks/DeleteConfirmation'
 import { TaskForm } from '@/components/tasks/TaskForm'
 import { TasksHeader } from '@/components/tasks/TasksHeader'
@@ -13,6 +14,7 @@ import type { Task, TaskInput } from '@/types/task'
 type Dialog = { type: 'create' } | { type: 'edit'; task: Task } | { type: 'delete'; task: Task }
 
 export function TasksPage() {
+  const { t } = useTranslation()
   const { tasks, status, load, addTask, updateTask, toggleTask, removeTask } = useTasksStore()
   const [view, setView] = useState(DEFAULT_TASK_VIEW)
   const [dialog, setDialog] = useState<Dialog | null>(null)
@@ -51,12 +53,10 @@ export function TasksPage() {
         (tasks.length === 0 ? (
           <div className="space-y-4 rounded-xl border border-dashed border-slate-300 px-4 py-12 text-center dark:border-slate-700">
             <div className="space-y-1">
-              <p className="text-lg font-semibold">Пока нет дел</p>
-              <p className="text-slate-500 dark:text-slate-400">
-                Создайте первое дело, чтобы начать.
-              </p>
+              <p className="text-lg font-semibold">{t('tasks.empty.title')}</p>
+              <p className="text-slate-500 dark:text-slate-400">{t('tasks.empty.hint')}</p>
             </div>
-            <Button onClick={() => setDialog({ type: 'create' })}>Добавить дело</Button>
+            <Button onClick={() => setDialog({ type: 'create' })}>{t('tasks.add')}</Button>
           </div>
         ) : (
           <>
@@ -72,7 +72,7 @@ export function TasksPage() {
 
       {(dialog?.type === 'create' || dialog?.type === 'edit') && (
         <Modal
-          title={dialog.type === 'edit' ? 'Редактирование дела' : 'Новое дело'}
+          title={dialog.type === 'edit' ? t('tasks.form.editTitle') : t('tasks.form.createTitle')}
           onClose={closeDialog}
         >
           <TaskForm

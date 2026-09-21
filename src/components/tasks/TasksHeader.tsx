@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 
 interface TasksHeaderProps {
@@ -7,16 +8,18 @@ interface TasksHeaderProps {
 }
 
 export function TasksHeader({ completed, active, onAdd }: TasksHeaderProps) {
+  const { t } = useTranslation()
+
   return (
     <div className="flex items-start justify-between gap-4">
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight">Список дел</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{t('tasks.title')}</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400">
-          Выполнено: {completed} · Осталось: {active}
+          {t('tasks.stats', { completed, active })}
         </p>
       </div>
       <Button onClick={onAdd} className="shrink-0">
-        Добавить дело
+        {t('tasks.add')}
       </Button>
     </div>
   )

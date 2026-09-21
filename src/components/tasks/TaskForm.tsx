@@ -1,13 +1,8 @@
 import { useState, type FormEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { fieldClass } from '@/components/ui/fieldClass'
-import {
-  PRIORITIES,
-  PRIORITY_LABELS,
-  type Task,
-  type TaskInput,
-  type TaskPriority,
-} from '@/types/task'
+import { PRIORITIES, type Task, type TaskInput, type TaskPriority } from '@/types/task'
 
 interface TaskFormProps {
   /** When provided the form edits this task, otherwise it creates a new one. */
@@ -17,17 +12,18 @@ interface TaskFormProps {
 }
 
 export function TaskForm({ task, onSubmit, onCancel }: TaskFormProps) {
+  const { t } = useTranslation()
   const [title, setTitle] = useState(task?.title ?? '')
   const [description, setDescription] = useState(task?.description ?? '')
   const [priority, setPriority] = useState<TaskPriority>(task?.priority ?? 'medium')
   const [dueDate, setDueDate] = useState(task?.dueDate ?? '')
-  const [titleError, setTitleError] = useState<string | null>(null)
+  const [titleInvalid, setTitleInvalid] = useState(false)
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
     const trimmedTitle = title.trim()
     if (!trimmedTitle) {
-      setTitleError('Введите название')
+      setTitleInvalid(true)
       return
     }
     onSubmit({
@@ -42,7 +38,7 @@ export function TaskForm({ task, onSubmit, onCancel }: TaskFormProps) {
     <form onSubmit={handleSubmit} noValidate className="space-y-4">
       <div className="space-y-1.5">
         <label htmlFor="task-title" className="text-sm font-medium">
-          Название
+          {t('tasks.form.titleField')}
         </label>
         <input
           id="task-title"
@@ -50,22 +46,22 @@ export function TaskForm({ task, onSubmit, onCancel }: TaskFormProps) {
           value={title}
           onChange={(event) => {
             setTitle(event.target.value)
-            setTitleError(null)
+            setTitleInvalid(false)
           }}
-          aria-invalid={titleError !== null}
-          aria-describedby={titleError ? 'task-title-error' : undefined}
+          aria-invalid={titleInvalid}
+          aria-describedby={titleInvalid ? 'task-title-error' : undefined}
           className={fieldClass}
         />
-        {titleError && (
+        {titleInvalid && (
           <p id="task-title-error" role="alert" className="text-sm text-red-600 dark:text-red-400">
-            {titleError}
+            {t('tasks.form.titleRequired')}
           </p>
         )}
       </div>
 
       <div className="space-y-1.5">
         <label htmlFor="task-description" className="text-sm font-medium">
-          Описание
+          {t('tasks.form.descriptionField')}
         </label>
         <textarea
           id="task-description"
@@ -79,7 +75,7 @@ export function TaskForm({ task, onSubmit, onCancel }: TaskFormProps) {
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
           <label htmlFor="task-priority" className="text-sm font-medium">
-            Приоритет
+            {t('tasks.form.priorityField')}
           </label>
           <select
             id="task-priority"
@@ -89,7 +85,7 @@ export function TaskForm({ task, onSubmit, onCancel }: TaskFormProps) {
           >
             {PRIORITIES.map((value) => (
               <option key={value} value={value}>
-                {PRIORITY_LABELS[value]}
+                {t(`priority.${value}`)}
               </option>
             ))}
           </select>
@@ -97,7 +93,7 @@ export function TaskForm({ task, onSubmit, onCancel }: TaskFormProps) {
 
         <div className="space-y-1.5">
           <label htmlFor="task-due-date" className="text-sm font-medium">
-            Дата выполнения
+            {t('tasks.form.dueDateField')}
           </label>
           <input
             id="task-due-date"
@@ -111,9 +107,9 @@ export function TaskForm({ task, onSubmit, onCancel }: TaskFormProps) {
 
       <div className="flex justify-end gap-2 pt-2">
         <Button variant="secondary" onClick={onCancel}>
-          Отмена
+          {t('common.cancel')}
         </Button>
-        <Button type="submit">{task ? 'Сохранить' : 'Создать'}</Button>
+        <Button type="submit">{task ? t('tasks.form.save') : t('tasks.form.create')}</Button>
       </div>
     </form>
   )

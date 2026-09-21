@@ -1,50 +1,38 @@
+import { useTranslation } from 'react-i18next'
 import { fieldClass } from '@/components/ui/fieldClass'
 import { cn } from '@/lib/cn'
 import type { PriorityFilter, SortOption, StatusFilter, TaskView } from '@/lib/taskView'
-import { PRIORITIES, PRIORITY_LABELS } from '@/types/task'
+import { PRIORITIES } from '@/types/task'
 
 interface TasksToolbarProps {
   view: TaskView
   onChange: (view: TaskView) => void
 }
 
-const statusOptions: { value: StatusFilter; label: string }[] = [
-  { value: 'all', label: 'Все' },
-  { value: 'active', label: 'Активные' },
-  { value: 'completed', label: 'Выполненные' },
-]
-
-const priorityOptions: { value: PriorityFilter; label: string }[] = [
-  { value: 'all', label: 'Все приоритеты' },
-  ...PRIORITIES.map((value) => ({ value, label: PRIORITY_LABELS[value] })),
-]
-
-const sortOptions: { value: SortOption; label: string }[] = [
-  { value: 'newest', label: 'Новые сначала' },
-  { value: 'oldest', label: 'Старые сначала' },
-  { value: 'priority', label: 'По приоритету' },
-  { value: 'dueDate', label: 'По сроку выполнения' },
-]
+const STATUS_FILTERS: readonly StatusFilter[] = ['all', 'active', 'completed']
+const SORT_OPTIONS: readonly SortOption[] = ['newest', 'oldest', 'priority', 'dueDate']
 
 export function TasksToolbar({ view, onChange }: TasksToolbarProps) {
+  const { t } = useTranslation()
+
   return (
     <div className="space-y-3">
       <input
         type="search"
         value={view.query}
         onChange={(event) => onChange({ ...view, query: event.target.value })}
-        placeholder="Поиск дел..."
-        aria-label="Поиск дел"
+        placeholder={t('tasks.toolbar.searchPlaceholder')}
+        aria-label={t('tasks.toolbar.searchLabel')}
         className={fieldClass}
       />
 
       <div className="flex flex-wrap items-center gap-3">
         <div
           role="group"
-          aria-label="Статус"
+          aria-label={t('tasks.toolbar.statusLabel')}
           className="flex w-full rounded-lg bg-slate-100 p-1 sm:inline-flex sm:w-auto dark:bg-slate-800"
         >
-          {statusOptions.map(({ value, label }) => (
+          {STATUS_FILTERS.map((value) => (
             <button
               key={value}
               type="button"
@@ -57,35 +45,36 @@ export function TasksToolbar({ view, onChange }: TasksToolbarProps) {
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100',
               )}
             >
-              {label}
+              {t(`tasks.toolbar.status.${value}`)}
             </button>
           ))}
         </div>
 
         <select
-          aria-label="Фильтр по приоритету"
+          aria-label={t('tasks.toolbar.priorityLabel')}
           value={view.priority}
           onChange={(event) =>
             onChange({ ...view, priority: event.target.value as PriorityFilter })
           }
           className={cn(fieldClass, 'w-auto min-w-36 flex-1 sm:flex-none')}
         >
-          {priorityOptions.map(({ value, label }) => (
+          <option value="all">{t('tasks.toolbar.allPriorities')}</option>
+          {PRIORITIES.map((value) => (
             <option key={value} value={value}>
-              {label}
+              {t(`priority.${value}`)}
             </option>
           ))}
         </select>
 
         <select
-          aria-label="Сортировка"
+          aria-label={t('tasks.toolbar.sortLabel')}
           value={view.sort}
           onChange={(event) => onChange({ ...view, sort: event.target.value as SortOption })}
           className={cn(fieldClass, 'w-auto min-w-36 flex-1 sm:ml-auto sm:flex-none')}
         >
-          {sortOptions.map(({ value, label }) => (
+          {SORT_OPTIONS.map((value) => (
             <option key={value} value={value}>
-              {label}
+              {t(`tasks.toolbar.sort.${value}`)}
             </option>
           ))}
         </select>

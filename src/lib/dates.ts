@@ -5,10 +5,10 @@ export function toISODate(date: Date): string {
   return `${date.getFullYear()}-${month}-${day}`
 }
 
-/** "20 сентября"; the year is added only when it differs from the current one. */
-export function formatDueDate(isoDate: string, now: Date = new Date()): string {
+/** "20 сентября" / "September 20"; the year is added only when it differs from the current one. */
+export function formatDueDate(isoDate: string, locale: string, now: Date = new Date()): string {
   const [year, month, day] = isoDate.split('-').map(Number)
-  return new Intl.DateTimeFormat('ru-RU', {
+  return new Intl.DateTimeFormat(locale, {
     day: 'numeric',
     month: 'long',
     year: year === now.getFullYear() ? undefined : 'numeric',

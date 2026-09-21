@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next'
 import { useCounterStore } from '@/store/useCounterStore'
 
 export function Counter() {
+  const { t } = useTranslation()
   const { count, increment, decrement, reset } = useCounterStore()
 
   return (
@@ -9,7 +11,7 @@ export function Counter() {
         type="button"
         onClick={decrement}
         className="rounded-lg bg-slate-100 px-3 py-2 text-lg font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-        aria-label="Decrement"
+        aria-label={t('counter.decrement')}
       >
         -
       </button>
@@ -18,7 +20,7 @@ export function Counter() {
         type="button"
         onClick={increment}
         className="rounded-lg bg-brand-600 px-3 py-2 text-lg font-semibold text-white transition hover:bg-brand-700"
-        aria-label="Increment"
+        aria-label={t('counter.increment')}
       >
         +
       </button>
@@ -27,7 +29,7 @@ export function Counter() {
         onClick={reset}
         className="ml-2 text-sm font-medium text-slate-500 underline-offset-4 hover:underline dark:text-slate-400"
       >
-        Reset
+        {t('counter.reset')}
       </button>
     </div>
   )

@@ -1,8 +1,9 @@
 import { Pencil, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/cn'
 import { formatDueDate } from '@/lib/dates'
 import { isOverdue } from '@/lib/taskView'
-import { PRIORITY_LABELS, type Task, type TaskPriority } from '@/types/task'
+import type { Task, TaskPriority } from '@/types/task'
 
 interface TaskItemProps {
   task: Task
@@ -21,6 +22,7 @@ const iconButtonClass =
   'rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-2 focus-visible:outline-brand-500 dark:hover:bg-slate-800 dark:hover:text-slate-200'
 
 export function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemProps) {
+  const { t, i18n } = useTranslation()
   const overdue = isOverdue(task)
 
   return (
@@ -51,7 +53,7 @@ export function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemProps) {
           <span
             className={cn('rounded-full px-2 py-0.5 font-medium', priorityStyles[task.priority])}
           >
-            {PRIORITY_LABELS[task.priority]}
+            {t(`priority.${task.priority}`)}
           </span>
           {task.dueDate && (
             <span
@@ -61,8 +63,8 @@ export function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemProps) {
                   : 'text-slate-500 dark:text-slate-400'
               }
             >
-              Срок: {formatDueDate(task.dueDate)}
-              {overdue && ' · Просрочено'}
+              {t('tasks.item.due', { date: formatDueDate(task.dueDate, i18n.language) })}
+              {overdue && ` · ${t('tasks.item.overdue')}`}
             </span>
           )}
         </div>
@@ -72,7 +74,7 @@ export function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemProps) {
         <button
           type="button"
           onClick={() => onEdit(task)}
-          aria-label={`Редактировать: ${task.title}`}
+          aria-label={t('tasks.item.edit', { title: task.title })}
           className={iconButtonClass}
         >
           <Pencil className="size-4" aria-hidden="true" />
@@ -80,7 +82,7 @@ export function TaskItem({ task, onToggle, onEdit, onDelete }: TaskItemProps) {
         <button
           type="button"
           onClick={() => onDelete(task)}
-          aria-label={`Удалить: ${task.title}`}
+          aria-label={t('tasks.item.delete', { title: task.title })}
           className={cn(iconButtonClass, 'hover:text-red-600 dark:hover:text-red-400')}
         >
           <Trash2 className="size-4" aria-hidden="true" />
