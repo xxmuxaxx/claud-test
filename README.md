@@ -35,17 +35,17 @@ npm install
 ## Скрипты
 
 | Команда                | Назначение                              |
-| ----------------------- | ---------------------------------------- |
-| `npm run dev`            | дев-сервер с HMR                         |
-| `npm run build`          | проверка типов + продакшен-сборка        |
-| `npm run preview`        | локальный предпросмотр собранного билда  |
-| `npm run lint`           | проверка ESLint                          |
-| `npm run lint:fix`       | автофикс ESLint                          |
-| `npm run format`         | форматирование Prettier                  |
-| `npm run format:check`   | проверка форматирования без изменений    |
-| `npm run typecheck`      | только проверка типов TypeScript         |
-| `npm run test`           | запуск тестов Vitest один раз            |
-| `npm run test:watch`     | тесты в watch-режиме                     |
+| ---------------------- | --------------------------------------- |
+| `npm run dev`          | дев-сервер с HMR                        |
+| `npm run build`        | проверка типов + продакшен-сборка       |
+| `npm run preview`      | локальный предпросмотр собранного билда |
+| `npm run lint`         | проверка ESLint                         |
+| `npm run lint:fix`     | автофикс ESLint                         |
+| `npm run format`       | форматирование Prettier                 |
+| `npm run format:check` | проверка форматирования без изменений   |
+| `npm run typecheck`    | только проверка типов TypeScript        |
+| `npm run test`         | запуск тестов Vitest один раз           |
+| `npm run test:watch`   | тесты в watch-режиме                    |
 
 ## Алиас путей
 

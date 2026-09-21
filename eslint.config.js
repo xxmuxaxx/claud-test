@@ -6,23 +6,20 @@ import tseslint from 'typescript-eslint'
 import { globalIgnores } from 'eslint/config'
 import prettier from 'eslint-config-prettier'
 
-export default tseslint.config(
-  globalIgnores(['dist', 'node_modules', 'coverage']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs.flat.recommended,
-      reactRefresh.configs.vite,
-      prettier,
-    ],
-    languageOptions: {
-      ecmaVersion: 2023,
-      globals: globals.browser,
-    },
-    rules: {
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-    },
+export default tseslint.config(globalIgnores(['dist', 'node_modules', 'coverage']), {
+  files: ['**/*.{ts,tsx}'],
+  extends: [
+    js.configs.recommended,
+    tseslint.configs.recommended,
+    reactHooks.configs.flat.recommended,
+    reactRefresh.configs.vite,
+    prettier,
+  ],
+  languageOptions: {
+    ecmaVersion: 2023,
+    globals: globals.browser,
   },
-)
+  rules: {
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+  },
+})
