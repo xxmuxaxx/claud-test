@@ -65,7 +65,7 @@ Before committing, `typecheck`, `lint`, `format:check` and `test` must pass in b
 
 ## Git / environment
 
-- Work in feature branches (`feature/...`, `chore/...`); merge into `main` fast-forward. There is no remote. Commit only when asked.
+- Work in feature branches (`feature/...`, `chore/...`); merge into `main` fast-forward. Commit and push only when asked. The remote `origin` is `https://github.com/xxmuxaxx/claud-test.git` (HTTPS: the machine's SSH key isn't registered on GitHub, and the sandboxed session has no GitHub credentials, so the user pushes from their own terminal).
 - Line endings: `.gitattributes` forces LF in the repo and the working tree (Prettier expects LF), overriding the global `core.autocrlf=true`. If `git status` still lists many files as modified with an empty diff, it is stale stat data or leftover CRLF from before this rule — run `git update-index -q --refresh` and check `git diff --stat` before assuming files changed.
 - Git can briefly hold `.git/index.lock` because the desktop app polls the repo; retry before deleting anything.
 - The built-in preview browser lacks Georgian ICU data, so `Intl` dates render in Russian there. Verify Georgian dates in Node or a regular browser.
