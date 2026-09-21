@@ -1,19 +1,26 @@
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
+import { cn } from '@/lib/cn'
 import { LanguageSwitcher } from './LanguageSwitcher'
 
 const links = [
   { to: '/', labelKey: 'nav.home' },
   { to: '/tasks', labelKey: 'nav.tasks' },
+  { to: '/wiki', labelKey: 'nav.wiki' },
   { to: '/about', labelKey: 'nav.about' },
 ] as const
 
-export function Navbar() {
+export function Navbar({ wide = false }: { wide?: boolean }) {
   const { t } = useTranslation()
 
   return (
     <header className="border-b border-slate-200 dark:border-slate-800">
-      <nav className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-4">
+      <nav
+        className={cn(
+          'mx-auto flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-4',
+          wide ? 'max-w-7xl' : 'max-w-3xl',
+        )}
+      >
         <span className="text-lg font-semibold">Modern React App</span>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
           <ul className="flex gap-6 text-sm font-medium whitespace-nowrap">

@@ -1,6 +1,6 @@
 # Modern React App
 
-React 19 + Vite + TypeScript + Tailwind CSS v4 + React Router 8 + Zustand. Sections: `/` (counter), `/tasks` (to-do list, localStorage), `/about`. The user communicates in Russian.
+React 19 + Vite + TypeScript + Tailwind CSS v4 + React Router 8 + Zustand. Sections: `/` (counter), `/tasks` (to-do list, localStorage), `/wiki` (personal Markdown wiki, localStorage), `/about`. The user communicates in Russian.
 
 ## Commands
 
@@ -20,6 +20,14 @@ Before committing, `typecheck`, `lint`, `format:check` and `test` must all pass.
 - `@/*` is an alias for `src/*`. Prettier: no semicolons, single quotes, 100 columns.
 - `cn()` (`src/lib/cn.ts`) only joins class names — it does **not** resolve conflicting Tailwind classes (no `tailwind-merge`). Don't pass two utilities for the same property expecting the last one to win.
 - Business logic lives in `src/lib` (pure, unit-tested) and `src/store`; components stay thin. The store and UI depend only on the `TaskRepository` interface in `src/services/taskRepository.ts` (currently backed by localStorage; swap the exported `taskRepository` to change the backend).
+
+## Wiki (`/wiki`)
+
+- Routes: `/wiki`, `/wiki/new`, `/wiki/:articleId`, `/wiki/:articleId/edit`, `/wiki/tags/:tag` (see `src/router`; `routes` is exported so tests can render the real tree in a memory router). Storage key `wiki_articles`.
+- Same layering as tasks: UI → `useWikiStore` → `WikiStorage` interface (`src/services/wikiStorage.ts`, localStorage-backed). The storage assigns `id`/`createdAt`/`updatedAt`; `update` replaces all editable fields. Pure logic (search, tags, related, excerpts) is in `src/lib/wiki.ts`.
+- The wide container is opted into per route with `handle: { wide: true }` (read by `Layout`).
+- Sidebar (desktop) vs. slide-out menu and split vs. tabbed editor are chosen in JS by `useIsDesktop` (matchMedia, `lg` = 1024px), not CSS, so only one variant is in the DOM. jsdom has no `matchMedia`, so tests get the narrow layout; stub `matchMedia` for desktop (see `WikiPages.test.tsx`).
+- Markdown is rendered by `MarkdownView` (react-markdown + remark-gfm; raw HTML is not rendered). The article title is the page `<h1>`, so Markdown headings are shifted one level down (`#` → `<h2>`) and styled by the `.wiki-h1..6` classes in `index.css`, not by tag. Tags are stored normalized (lowercase, no `#`).
 
 ## i18n (ru / en / ka)
 
